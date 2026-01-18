@@ -129,7 +129,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 bg-secondary/30 border-b border-border sticky top-0 z-10">
+      <section className="py-8 bg-secondary/30 border-b border-border sticky top-0 z-20 shadow-md">
         <div className="container mx-auto px-4">
           <div className="space-y-4">
             <div className="relative">
@@ -160,7 +160,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="py-16 pt-8">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="conferences">
             <TabsList className="grid w-full grid-cols-2 mb-8">
