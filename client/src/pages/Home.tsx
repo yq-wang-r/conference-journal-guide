@@ -151,8 +151,8 @@ export default function Home() {
       </section>
 
       {/* Filter Section - Sticky */}
-      <section className="sticky top-0 z-40 w-full bg-secondary/50 border-b border-border shadow-md">
-        <div className="container mx-auto px-4 py-6 space-y-4">
+      <section className="sticky top-0 z-40 w-full bg-background border-b border-border shadow-lg">
+        <div className="container mx-auto px-4 py-4 space-y-3">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-3 text-muted-foreground" size={20} />
@@ -209,10 +209,10 @@ export default function Home() {
       </section>
 
       {/* Content Section */}
-      <section className="w-full py-8 pt-24">
+      <section className="w-full py-8">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="conferences" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsList className="grid w-full grid-cols-2 mb-8 mt-4">
               <TabsTrigger value="conferences">Conferences ({filteredAndSortedConferences.length})</TabsTrigger>
               <TabsTrigger value="journals">Journals ({filteredAndSortedJournals.length})</TabsTrigger>
             </TabsList>
