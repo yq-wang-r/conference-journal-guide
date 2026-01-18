@@ -160,10 +160,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 pt-8">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="conferences">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsList className="grid w-full grid-cols-2 mb-8 mt-20">
               <TabsTrigger value="conferences">Conferences ({filteredAndSortedConferences.length})</TabsTrigger>
               <TabsTrigger value="journals">Journals ({filteredAndSortedJournals.length})</TabsTrigger>
             </TabsList>
