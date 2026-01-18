@@ -32,3 +32,8 @@
 - [x] 为所有期刊数据添加isSCI字段
 - [x] 更新卡片UI以展示EI和SCI标签
 - [x] 测试EI和SCI标签显示
+- [x] 从EI Compendex数据库验证每个会议的索引状态
+- [x] 从Web of Science数据库验证每个期刊的SCI索引状态
+- [x] 更新Home.tsx中的EI和SCI标注（仅标注确实被收录的资源）
+- [x] 添加EI/SCI标签的说明信息和数据来源
+- [x] 在网站上显示EI/SCI标签的含义
