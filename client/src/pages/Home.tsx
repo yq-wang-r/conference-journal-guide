@@ -171,7 +171,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-2">
               <Button variant={categoryFilter === "all" ? "default" : "outline"} onClick={() => setCategoryFilter("all")} size="sm">All</Button>
               <Button variant={categoryFilter === "traditional" ? "default" : "outline"} onClick={() => setCategoryFilter("traditional")} size="sm">Traditional Communications</Button>
-              <Button variant={categoryFilter === "ai" ? "default" : "outline"} onClick={() => setCategoryFilter("ai")} size="sm" className="bg-purple-600 hover:bg-purple-700 text-white">AI & Communications</Button>
+              <Button variant={categoryFilter === "ai" ? "default" : "outline"} onClick={() => setCategoryFilter("ai")} size="sm" className="bg-purple-600 hover:bg-purple-700 text-white" style={{color: '#000000', backgroundColor: '#fbfbfb'}}>AI & Communications</Button>
             </div>
           </div>
 
