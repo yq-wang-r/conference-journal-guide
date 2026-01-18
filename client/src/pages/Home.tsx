@@ -309,8 +309,8 @@ export default function Home() {
       <section className="w-full py-20 md:py-32 bg-gradient-to-r from-primary to-primary/80 text-center text-white">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Conferences & Journals</h1>
-          <p className="text-lg text-blue-50 mb-2">Comprehensive Guide for Graduate Students in ICE</p>
-          <p className="text-sm text-blue-100 mb-6">36 Conferences + 53 Journals (Traditional Communications, AI & Communications, AI & Embodied Intelligence, AI)</p>
+          <p className="text-lg text-blue-50 mb-2">Your Guide to Top Conferences & Journals</p>
+          <p className="text-sm text-blue-100 mb-6">36 Conferences + 53 Journals across 4 Research Areas</p>
           <div className="flex justify-center gap-4 text-sm mb-6">
             <div className="flex items-center gap-1">
               <Users size={16} />
