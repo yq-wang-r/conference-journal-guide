@@ -37,3 +37,11 @@
 - [x] 更新Home.tsx中的EI和SCI标注（仅标注确实被收录的资源）
 - [x] 添加EI/SCI标签的说明信息和数据来源
 - [x] 在网站上显示EI/SCI标签的含义
+- [x] 添加IEEE GLOBECOM 2025态2026
+- [x] 添加IEEE INFOCOM 2025态2026
+- [x] 添加IEEE ICC 2025
+- [x] 添加FCN 2025
+- [x] 添加VTC2025-Fall
+- [x] 添加IEEE CNS 2025
+- [x] 添加IEEE VNC 2026
+- [x] 添加IEEE CCNC 2025
