@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Award, Search, ArrowUpDown, Heart } from "lucide-react";
+import { ArrowLeft, Heart, Download, Trash2, ArrowUpDown } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
@@ -74,193 +74,198 @@ function getDeadlineLabel(days: number): string {
 
 type SortBy = "deadline-asc" | "deadline-desc" | "name";
 
-export default function Home() {
+export default function MyList() {
   const [, setLocation] = useLocation();
-  const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
+  const { favorites, removeFavorite, clearFavorites } = useFavorites();
   const [sortBy, setSortBy] = useState<SortBy>("deadline-asc");
-  const [showExpired, setShowExpired] = useState(false);
 
-  const filteredAndSortedConferences = useMemo(() => {
-    let filtered = conferences.filter(conf => {
-      const matchesSearch = conf.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesDifficulty = !difficultyFilter || conf.difficulty === difficultyFilter;
-      const matchesExpired = showExpired || conf.daysUntilDeadline >= 0;
-      return matchesSearch && matchesDifficulty && matchesExpired;
-    });
+  const favoriteConferences = useMemo(() => {
+    const items = favorites
+      .filter(f => f.type === "conference")
+      .map(f => conferences.find(c => c.id === f.id))
+      .filter(Boolean) as typeof conferences;
 
-    return filtered.sort((a, b) => {
+    return items.sort((a, b) => {
       if (sortBy === "deadline-asc") return a.daysUntilDeadline - b.daysUntilDeadline;
       if (sortBy === "deadline-desc") return b.daysUntilDeadline - a.daysUntilDeadline;
       return a.name.localeCompare(b.name);
     });
-  }, [searchTerm, difficultyFilter, sortBy, showExpired]);
+  }, [favorites, sortBy]);
 
-  const filteredAndSortedJournals = useMemo(() => {
-    let filtered = journals.filter(journal => {
-      const matchesSearch = journal.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesDifficulty = !difficultyFilter || journal.difficulty === difficultyFilter;
-      const matchesExpired = showExpired || journal.daysUntilDeadline >= 0;
-      return matchesSearch && matchesDifficulty && matchesExpired;
-    });
+  const favoriteJournals = useMemo(() => {
+    const items = favorites
+      .filter(f => f.type === "journal")
+      .map(f => journals.find(j => j.id === f.id))
+      .filter(Boolean) as typeof journals;
 
-    return filtered.sort((a, b) => {
+    return items.sort((a, b) => {
       if (sortBy === "deadline-asc") return a.daysUntilDeadline - b.daysUntilDeadline;
       if (sortBy === "deadline-desc") return b.daysUntilDeadline - a.daysUntilDeadline;
       return a.name.localeCompare(b.name);
     });
-  }, [searchTerm, difficultyFilter, sortBy, showExpired]);
+  }, [favorites, sortBy]);
+
+  const exportAsCSV = () => {
+    let csv = "Type,Name,Deadline,Days Until Deadline,Difficulty,Audience\n";
+    
+    favoriteConferences.forEach(conf => {
+      csv += `Conference,"${conf.name}",${conf.deadline},${conf.daysUntilDeadline},${conf.difficulty},"${conf.audience}"\n`;
+    });
+    
+    favoriteJournals.forEach(journal => {
+      csv += `Journal,"${journal.name}",${journal.deadline},${journal.daysUntilDeadline},${journal.difficulty},"${journal.audience}"\n`;
+    });
+
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csv));
+    element.setAttribute("download", "my-submission-list.csv");
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <section className="relative w-full py-20 md:py-32 bg-cover bg-center">
+      <section className="relative w-full py-12 md:py-20 bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70"></div>
-        <div className="relative container mx-auto px-4 text-center">
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-white mb-4">Conferences & Journals</h1>
-          <p className="text-lg text-blue-50">Comprehensive Guide for Graduate Students in ICE</p>
-          <p className="text-sm text-blue-100 mt-2">11 Conferences + 24 Journals</p>
-          <div className="mt-6">
-            <Button onClick={() => setLocation("/my-list")} variant="secondary" size="lg" className="gap-2">
-              <Heart size={20} />
-              My Submission List ({favorites.length})
-            </Button>
+        <div className="relative container mx-auto px-4">
+          <Button onClick={() => setLocation("/")} variant="secondary" size="sm" className="gap-2 mb-4">
+            <ArrowLeft size={16} />
+            Back to All
+          </Button>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white mb-2">My Submission List</h1>
+          <p className="text-lg text-blue-50">Your personalized conference and journal submission plan</p>
+          <p className="text-sm text-blue-100 mt-2">Total: {favorites.length} items ({favoriteConferences.length} conferences + {favoriteJournals.length} journals)</p>
+        </div>
+      </section>
+
+      {favorites.length === 0 ? (
+        <section className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <Heart size={48} className="mx-auto text-muted-foreground mb-4 opacity-50" />
+            <h2 className="text-2xl font-bold text-foreground mb-2">No items in your list yet</h2>
+            <p className="text-muted-foreground mb-6">Start by clicking the heart icon on conferences and journals to add them to your submission list.</p>
+            <Button onClick={() => setLocation("/")} size="lg">Browse Conferences & Journals</Button>
           </div>
-        </div>
-      </section>
-
-      <section className="py-8 bg-secondary/30 border-b border-border sticky top-0 z-10">
-        <div className="container mx-auto px-4">
-          <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 text-muted-foreground" size={20} />
-              <input type="text" placeholder="Search conferences or journals..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
+        </section>
+      ) : (
+        <>
+          <section className="py-8 bg-secondary/30 border-b border-border sticky top-0 z-10">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-wrap gap-2 items-center justify-between">
+                <div className="flex flex-wrap gap-2 items-center">
+                  <span className="text-sm font-semibold text-muted-foreground">Sort by:</span>
+                  <Button variant={sortBy === "deadline-asc" ? "default" : "outline"} onClick={() => setSortBy("deadline-asc")} size="sm" className="gap-2">
+                    <ArrowUpDown size={16} />Deadline (Soon First)
+                  </Button>
+                  <Button variant={sortBy === "deadline-desc" ? "default" : "outline"} onClick={() => setSortBy("deadline-desc")} size="sm" className="gap-2">
+                    <ArrowUpDown size={16} />Deadline (Later First)
+                  </Button>
+                  <Button variant={sortBy === "name" ? "default" : "outline"} onClick={() => setSortBy("name")} size="sm">Name (A-Z)</Button>
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={exportAsCSV} variant="outline" size="sm" className="gap-2">
+                    <Download size={16} />Export CSV
+                  </Button>
+                  <Button onClick={() => clearFavorites()} variant="destructive" size="sm" className="gap-2">
+                    <Trash2 size={16} />Clear All
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-semibold text-muted-foreground">Difficulty:</span>
-              <Button variant={!difficultyFilter ? "default" : "outline"} onClick={() => setDifficultyFilter(null)} size="sm">All</Button>
-              {["Low", "Medium", "Medium-High", "High"].map(diff => (
-                <Button key={diff} variant={difficultyFilter === diff ? "default" : "outline"} onClick={() => setDifficultyFilter(diff)} size="sm">{diff}</Button>
-              ))}
+          </section>
+
+          <section className="py-16">
+            <div className="container mx-auto px-4">
+              <Tabs defaultValue="conferences">
+                <TabsList className="grid w-full grid-cols-2 mb-8">
+                  <TabsTrigger value="conferences">Conferences ({favoriteConferences.length})</TabsTrigger>
+                  <TabsTrigger value="journals">Journals ({favoriteJournals.length})</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="conferences" className="space-y-4">
+                  {favoriteConferences.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No conferences in your list. Add some from the main page!</p>
+                  ) : (
+                    favoriteConferences.map(conf => (
+                      <Card key={conf.id} className={`hover:shadow-lg transition-shadow ${conf.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
+                        <CardHeader>
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg md:text-xl mb-2">{conf.name}</CardTitle>
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                <Badge className={getDifficultyColor(conf.difficulty)}>Difficulty: {conf.difficulty}</Badge>
+                                <Badge variant="outline" className="bg-blue-50">{conf.audience}</Badge>
+                              </div>
+                              <div className={`text-sm font-semibold ${getDeadlineColor(conf.daysUntilDeadline)}`}>
+                                📅 Deadline: {conf.deadline} ({getDeadlineLabel(conf.daysUntilDeadline)})
+                              </div>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => removeFavorite(conf.id, "conference")} className="text-red-500">
+                              <Heart size={20} fill="currentColor" />
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div><p className="font-semibold text-muted-foreground">Conference Date</p><p>{conf.date}</p></div>
+                            <div><p className="font-semibold text-muted-foreground">Location</p><p>{conf.location}</p></div>
+                          </div>
+                          <a href={conf.website} target="_blank" rel="noopener noreferrer">
+                            <Button size="sm">Visit Website</Button>
+                          </a>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </TabsContent>
+
+                <TabsContent value="journals" className="space-y-4">
+                  {favoriteJournals.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No journals in your list. Add some from the main page!</p>
+                  ) : (
+                    favoriteJournals.map(journal => (
+                      <Card key={journal.id} className={`hover:shadow-lg transition-shadow ${journal.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
+                        <CardHeader>
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg md:text-xl mb-2">{journal.name}</CardTitle>
+                              <div className="flex flex-wrap gap-2 mb-2">
+                                <Badge className={getDifficultyColor(journal.difficulty)}>Difficulty: {journal.difficulty}</Badge>
+                                <Badge variant="outline" className="bg-blue-50">{journal.audience}</Badge>
+                              </div>
+                              <div className={`text-sm font-semibold ${getDeadlineColor(journal.daysUntilDeadline)}`}>
+                                📅 Next Deadline: {journal.deadline} ({getDeadlineLabel(journal.daysUntilDeadline)})
+                              </div>
+                            </div>
+                            <Button variant="ghost" size="sm" onClick={() => removeFavorite(journal.id, "journal")} className="text-red-500">
+                              <Heart size={20} fill="currentColor" />
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div><p className="font-semibold text-muted-foreground">Impact</p><p>{journal.impact}</p></div>
+                            <div><p className="font-semibold text-muted-foreground">Review Cycle</p><p>{journal.review}</p></div>
+                          </div>
+                          <a href={journal.website} target="_blank" rel="noopener noreferrer">
+                            <Button size="sm">Visit Website</Button>
+                          </a>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-semibold text-muted-foreground">Sort by:</span>
-              <Button variant={sortBy === "deadline-asc" ? "default" : "outline"} onClick={() => setSortBy("deadline-asc")} size="sm" className="gap-2">
-                <ArrowUpDown size={16} />Deadline (Soon First)
-              </Button>
-              <Button variant={sortBy === "deadline-desc" ? "default" : "outline"} onClick={() => setSortBy("deadline-desc")} size="sm" className="gap-2">
-                <ArrowUpDown size={16} />Deadline (Later First)
-              </Button>
-              <Button variant={sortBy === "name" ? "default" : "outline"} onClick={() => setSortBy("name")} size="sm">Name (A-Z)</Button>
-              <Button variant={showExpired ? "default" : "outline"} onClick={() => setShowExpired(!showExpired)} size="sm">
-                {showExpired ? "Show All" : "Hide Expired"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <Tabs defaultValue="conferences">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="conferences">Conferences ({filteredAndSortedConferences.length})</TabsTrigger>
-              <TabsTrigger value="journals">Journals ({filteredAndSortedJournals.length})</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="conferences" className="space-y-4">
-              {filteredAndSortedConferences.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No conferences found matching your criteria.</p>
-              ) : (
-                filteredAndSortedConferences.map(conf => (
-                  <Card key={conf.id} className={`hover:shadow-lg transition-shadow ${conf.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <CardTitle className="text-lg md:text-xl mb-2">{conf.name}</CardTitle>
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            <Badge className={getDifficultyColor(conf.difficulty)}>Difficulty: {conf.difficulty}</Badge>
-                            <Badge variant="outline" className="bg-blue-50">{conf.audience}</Badge>
-                          </div>
-                          <div className={`text-sm font-semibold ${getDeadlineColor(conf.daysUntilDeadline)}`}>
-                            📅 Deadline: {conf.deadline} ({getDeadlineLabel(conf.daysUntilDeadline)})
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={() => {
-                          if (isFavorite(conf.id, "conference")) {
-                            removeFavorite(conf.id, "conference");
-                          } else {
-                            addFavorite(conf.id, "conference", conf.name);
-                          }
-                        }} className={isFavorite(conf.id, "conference") ? "text-red-500" : ""}>
-                          <Heart size={20} fill={isFavorite(conf.id, "conference") ? "currentColor" : "none"} />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div><p className="font-semibold text-muted-foreground">Conference Date</p><p>{conf.date}</p></div>
-                        <div><p className="font-semibold text-muted-foreground">Location</p><p>{conf.location}</p></div>
-                      </div>
-                      <a href={conf.website} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" className="gap-2"><Award size={16} />Visit Website</Button>
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </TabsContent>
-
-            <TabsContent value="journals" className="space-y-4">
-              {filteredAndSortedJournals.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No journals found matching your criteria.</p>
-              ) : (
-                filteredAndSortedJournals.map(journal => (
-                  <Card key={journal.id} className={`hover:shadow-lg transition-shadow ${journal.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <CardTitle className="text-lg md:text-xl mb-2">{journal.name}</CardTitle>
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            <Badge className={getDifficultyColor(journal.difficulty)}>Difficulty: {journal.difficulty}</Badge>
-                            <Badge variant="outline" className="bg-blue-50">{journal.audience}</Badge>
-                          </div>
-                          <div className={`text-sm font-semibold ${getDeadlineColor(journal.daysUntilDeadline)}`}>
-                            📅 Next Deadline: {journal.deadline} ({getDeadlineLabel(journal.daysUntilDeadline)})
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm" onClick={() => {
-                          if (isFavorite(journal.id, "journal")) {
-                            removeFavorite(journal.id, "journal");
-                          } else {
-                            addFavorite(journal.id, "journal", journal.name);
-                          }
-                        }} className={isFavorite(journal.id, "journal") ? "text-red-500" : ""}>
-                          <Heart size={20} fill={isFavorite(journal.id, "journal") ? "currentColor" : "none"} />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div><p className="font-semibold text-muted-foreground">Impact</p><p>{journal.impact}</p></div>
-                        <div><p className="font-semibold text-muted-foreground">Review Cycle</p><p>{journal.review}</p></div>
-                      </div>
-                      <a href={journal.website} target="_blank" rel="noopener noreferrer">
-                        <Button size="sm" className="gap-2"><Award size={16} />Visit Website</Button>
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
 
       <footer className="py-8 border-t border-border bg-muted/30">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Comprehensive Conference and Journal Submission Guide | Last Updated: January 2026</p>
-          <p className="mt-2">11 Conferences + 24 Journals for Information and Communication Engineering</p>
+          <p>My Submission List | Personalized Conference and Journal Guide</p>
         </div>
       </footer>
     </div>
