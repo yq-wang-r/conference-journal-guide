@@ -129,6 +129,29 @@ export default function Home() {
   // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
   let { user, loading, error, isAuthenticated, logout } = useAuth();
 
+  const [showFilters, setShowFilters] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // 如果向下滚动超过100px，则隐藏筛选区域
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setShowFilters(false);
+      } 
+      // 如果向上滚动，则显示筛选区域
+      else if (currentScrollY < lastScrollY) {
+        setShowFilters(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const [sessionId] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       let id = localStorage.getItem('sessionId');
@@ -222,8 +245,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Filter Section - Sticky */}
-      <section className="sticky top-0 z-40 w-full bg-background border-b border-border shadow-lg">
+      {/* Filter Section - Sticky with Collapse Animation */}
+      <section className={`sticky top-0 z-40 w-full bg-background border-b border-border shadow-lg transition-all duration-300 ease-in-out overflow-hidden ${
+        showFilters ? 'max-h-96' : 'max-h-0'
+      }`}>
         <div className="container mx-auto px-4 py-4 space-y-3">
           {/* Search */}
           <div className="relative">
@@ -281,7 +306,9 @@ export default function Home() {
       </section>
 
       {/* Content Section */}
-      <section className="w-full py-8 pt-24">
+      <section className={`w-full py-8 transition-all duration-300 ${
+        showFilters ? 'pt-24' : 'pt-8'
+      }`}>
         <div className="container mx-auto px-4">
           <Tabs defaultValue="conferences" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8 mt-4">
