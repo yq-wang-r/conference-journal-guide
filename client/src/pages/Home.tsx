@@ -1,10 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Search, ArrowUpDown, Award } from "lucide-react";
+import { Heart, Search, ArrowUpDown, Award, Users, MousePointerClick } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
@@ -89,6 +91,32 @@ type SortBy = "deadline-asc" | "deadline-desc" | "name" | "popularity";
 type CategoryFilter = "all" | "traditional" | "ai";
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
+  const [sessionId] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      let id = localStorage.getItem('sessionId');
+      if (!id) {
+        id = Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('sessionId', id);
+      }
+      return id;
+    }
+    return Math.random().toString(36).substr(2, 9);
+  });
+  
+  const { data: stats } = trpc.analytics.getStats.useQuery();
+  const recordEventMutation = trpc.analytics.recordEvent.useMutation();
+  
+  useEffect(() => {
+    recordEventMutation.mutate({
+      eventType: "page_view",
+      sessionId: sessionId,
+    });
+  }, [sessionId]);
+
   const [, setLocation] = useLocation();
   const { favorites, addFavorite, removeFavorite, isFavorite } = useFavorites();
   const [searchTerm, setSearchTerm] = useState("");
@@ -142,6 +170,16 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Conferences & Journals</h1>
           <p className="text-lg text-blue-50 mb-2">Comprehensive Guide for Graduate Students in ICE</p>
+          <div className="flex justify-center gap-8 mb-8 text-sm">
+            <div className="flex items-center gap-2">
+              <Users size={16} />
+              <span>{stats?.uniqueVisitors || 0} Visitors</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MousePointerClick size={16} />
+              <span>{stats?.totalClicks || 0} Interactions</span>
+            </div>
+          </div>
           <p className="text-sm text-blue-100 mb-6">15 Conferences + 23 Journals (Including AI & Communications)</p>
           <Button onClick={() => setLocation("/my-list")} variant="secondary" size="lg" className="gap-2">
             <Heart size={20} />

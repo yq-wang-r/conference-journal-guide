@@ -8,8 +8,8 @@ import { FavoritesProvider } from "./contexts/FavoritesContext";
 import Home from "./pages/Home";
 import MyList from "./pages/MyList";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
