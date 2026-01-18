@@ -8,6 +8,33 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Search, ArrowUpDown, Award, Users, MousePointerClick, ChevronUp } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useEffect as useEffectTimer } from "react";
+
+// 计算距离截止日期的时间
+const calculateTimeRemaining = (deadline: string) => {
+  const now = new Date('2026-01-19T00:00:00').getTime();
+  const deadlineDate = new Date(deadline).getTime();
+  const diff = deadlineDate - now;
+  
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true };
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  return { days, hours, minutes, seconds, isExpired: false };
+};
+
+// 格式化时间显示
+const formatTimeRemaining = (deadline: string) => {
+  const { days, hours, minutes, seconds, isExpired } = calculateTimeRemaining(deadline);
+  if (isExpired) return "已截止";
+  if (days > 0) return `${days}天 ${hours}小时`;
+  if (hours > 0) return `${hours}小时 ${minutes}分钟`;
+  if (minutes > 0) return `${minutes}分钟 ${seconds}秒`;
+  return `${seconds}秒`;
+};
 
 const conferences = [
   // Traditional Communications
@@ -23,12 +50,8 @@ const conferences = [
   { id: "wimob2026", name: "WiMob 2026", date: "TBD", location: "TBD", website: "http://www.wimob.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-04-15", daysUntilDeadline: 88, category: "Traditional Communications", popularity: 68, isEI: true, avgPublishTime: "4-6 months", topics: ["Mobile Computing", "Wireless Networks", "Mobile Applications", "Ubiquitous Computing", "Context Awareness"], callForPapersUrl: "http://www.wimob.org/" },
   { id: "eice2026", name: "EICE 2026", date: "January 30 - February 1, 2026", location: "Sanya, China", website: "http://www.ei-ce.com/", difficulty: "Low", audience: "Master students", deadline: "2026-01-20", daysUntilDeadline: 2, category: "Traditional Communications", popularity: 60, isEI: true, avgPublishTime: "2-3 months", topics: ["Electronics & Information", "Communication Engineering", "Signal Processing", "Network Technology", "Wireless Communications"], callForPapersUrl: "http://www.ei-ce.com/" },
   
-  { id: "globecom2025", name: "IEEE GLOBECOM 2025", date: "December 8-12, 2025", location: "Taipei, Taiwan", website: "https://globecom2025.ieee-globecom.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2025-06-15", daysUntilDeadline: 149, category: "Traditional Communications", popularity: 95, isEI: true, isScoped: false, avgPublishTime: "6-8 months", topics: ["Optical Communications", "Satellite Communications", "Network Architecture", "Internet of Things", "6G Networks"], callForPapersUrl: "https://globecom2025.ieee-globecom.org/call-papers" },
-  { id: "icc2025", name: "IEEE ICC 2025", date: "June 9-13, 2025", location: "Montreal, Canada", website: "https://icc2025.ieee-icc.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2025-03-15", daysUntilDeadline: 56, category: "Traditional Communications", popularity: 96, isEI: true, isScoped: false, avgPublishTime: "6-8 months", topics: ["Communication Theory", "Wireless Networks", "Network Architecture", "IoT", "5G/6G"], callForPapersUrl: "https://icc2025.ieee-icc.org/call-papers" },
-  { id: "infocom2025", name: "IEEE INFOCOM 2025", date: "May 19-22, 2025", location: "London, UK", website: "https://infocom2025.ieee-infocom.org/", difficulty: "Very High", audience: "PhD students, Researchers", deadline: "2024-12-15", daysUntilDeadline: -35, category: "Traditional Communications", popularity: 98, isEI: true, isScoped: false, avgPublishTime: "8-10 months", topics: ["Network Architecture", "Routing", "Congestion Control", "Wireless Networks", "Network Security"], callForPapersUrl: "https://infocom2025.ieee-infocom.org/call-papers" },
+
   { id: "infocom2026", name: "IEEE INFOCOM 2026", date: "May 18-21, 2026", location: "Tokyo, Japan", website: "https://infocom2026.ieee-infocom.org/", difficulty: "Very High", audience: "PhD students, Researchers", deadline: "2025-07-31", daysUntilDeadline: 194, category: "Traditional Communications", popularity: 98, isEI: true, isScoped: false, avgPublishTime: "8-10 months", topics: ["Network Architecture", "Routing", "Congestion Control", "Wireless Networks", "Network Security"], callForPapersUrl: "https://infocom2026.ieee-infocom.org/call-papers" },
-  { id: "fcn2025", name: "FCN 2025 (Future Communications and Networks)", date: "August 18-22, 2025", location: "Belgrade, Serbia", website: "http://www.future-forum.org.cn/en/fcn2025/index.html", difficulty: "Medium-High", audience: "Master & PhD students", deadline: "2025-05-15", daysUntilDeadline: 117, category: "Traditional Communications", popularity: 75, isEI: false, isScoped: true, avgPublishTime: "5-7 months", topics: ["6G Networks", "AI-Enabled Communications", "Quantum Communications", "Terahertz", "Network Architecture"], callForPapersUrl: "http://www.future-forum.org.cn/en/fcn2025/Papers.html" },
-  { id: "vtc2025fall", name: "IEEE VTC 2025-Fall", date: "October 19-22, 2025", location: "Chengdu, China", website: "https://events.vtsociety.org/vtc2025-fall/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2025-03-15", daysUntilDeadline: 56, category: "Traditional Communications", popularity: 88, isEI: true, isScoped: false, avgPublishTime: "6-8 months", topics: ["Vehicular Communications", "5G/6G", "Wireless Networks", "Mobile Networks", "V2X Communications"], callForPapersUrl: "https://events.vtsociety.org/vtc2025-fall/call-for-papers" },
 
     // AI & Communications
   { id: "icmlcn2026", name: "IEEE ICMLCN 2026", date: "May 26-29, 2026", location: "Barcelona, Spain", website: "https://icmlcn2026.ieee-icmlcn.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-01-31", daysUntilDeadline: 13, category: "AI & Communications", popularity: 98, isScoped: true, avgPublishTime: "5-7 months", topics: ["Machine Learning for Communications", "Deep Learning", "Neural Networks", "Network Optimization", "Intelligent Resource Allocation"], callForPapersUrl: "https://icmlcn2026.ieee-icmlcn.org/" },
@@ -202,6 +225,16 @@ export default function Home() {
   const [showFilters, setShowFilters] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [, setUpdateTrigger] = useState(0); // 用于触发重新渲染以更新倒计时
+
+  // 实时更新倒计时
+  useEffectTimer(() => {
+    const timer = setInterval(() => {
+      setUpdateTrigger(prev => prev + 1);
+    }, 1000); // 每秒更新一次
+    
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -317,7 +350,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Conferences & Journals</h1>
           <p className="text-lg text-blue-50 mb-2">Your Guide to Top Conferences & Journals</p>
-          <p className="text-sm text-blue-100 mb-6">42 Conferences + 53 Journals across 4 Research Areas</p>
+          <p className="text-sm text-blue-100 mb-6">36 Conferences + 53 Journals across 4 Research Areas</p>
           <div className="flex flex-wrap justify-center gap-3 text-xs text-blue-100 mb-6">
             <div className="flex items-center gap-1"><span className="w-3 h-3 bg-green-400 rounded"></span>EI Indexed (Engineering Index)</div>
             <div className="flex items-center gap-1"><span className="w-3 h-3 bg-blue-400 rounded"></span>Scopus Indexed</div>
@@ -439,7 +472,7 @@ export default function Home() {
                             {conf.isScoped && <Badge className="bg-blue-100 text-blue-800">✓ Scopus Indexed</Badge>}
                           </div>
                           <div className={`text-sm font-semibold ${getDeadlineColor(conf.daysUntilDeadline)}`}>
-                            📅 Deadline: {conf.deadline} ({getDeadlineLabel(conf.daysUntilDeadline)})
+                            📅 Deadline: {conf.deadline} | ⏱️ {formatTimeRemaining(conf.deadline)}
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" onClick={() => {
@@ -502,7 +535,7 @@ export default function Home() {
                             {journal.isSCI && <Badge className="bg-purple-100 text-purple-800">✓ SCI Indexed</Badge>}
                           </div>
                           <div className={`text-sm font-semibold ${getDeadlineColor(journal.daysUntilDeadline)}`}>
-                            📅 Next Deadline: {journal.deadline} ({getDeadlineLabel(journal.daysUntilDeadline)})
+                            📅 Deadline: {journal.deadline} | ⏱️ {formatTimeRemaining(journal.deadline)}
                           </div>
                         </div>
                         <Button variant="ghost" size="sm" onClick={() => {
@@ -563,5 +596,4 @@ export default function Home() {
     </div>
   );
 }
-
 
