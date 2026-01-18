@@ -27,4 +27,8 @@
 - [x] 添加10个顶级AI会议（ICML、NeurIPS、ICLR、CVPR等）
 - [x] 添加机器人会议（ICRA、IROS等）
 - [x] 添加10个通信领域的期刊
-- [x] 添加10个通信领域的会议
+- [x] 添加10个通信领域的会议- [x] 为Home.tsx数据添加EI和SCI标注字段
+- [x] 为所有会议数据添加isEI字段
+- [x] 为所有期刊数据添加isSCI字段
+- [x] 更新卡片UI以展示EI和SCI标签
+- [x] 测试EI和SCI标签显示
