@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Search, ArrowUpDown, Award, Users, MousePointerClick } from "lucide-react";
+import { Heart, Search, ArrowUpDown, Award, Users, MousePointerClick, ChevronUp } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
@@ -131,6 +131,7 @@ export default function Home() {
 
   const [showFilters, setShowFilters] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -145,12 +146,22 @@ export default function Home() {
         setShowFilters(true);
       }
       
+      // 如果滚动超过300px，显示返回顶部按钮
+      setShowScrollTop(currentScrollY > 300);
+      
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   const [sessionId] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -442,6 +453,18 @@ export default function Home() {
           </Tabs>
         </div>
       </section>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 bg-primary hover:bg-primary/90 text-white rounded-full p-3 shadow-lg transition-all duration-300 ease-in-out hover:scale-110 animate-in fade-in slide-in-from-bottom-4"
+          aria-label="Scroll to top"
+          title="Return to top"
+        >
+          <ChevronUp size={24} />
+        </button>
+      )}
     </div>
   );
 }
