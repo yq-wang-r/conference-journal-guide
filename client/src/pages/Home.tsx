@@ -2,9 +2,9 @@ import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, BookOpen, Award, Search, ArrowUpDown, Heart } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Heart, Search, ArrowUpDown, Award } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
@@ -60,7 +60,6 @@ const journals = [
 function getDifficultyColor(difficulty: string): string {
   switch (difficulty) {
     case "Low": return "bg-green-100 text-green-800";
-    case "Low-Medium": return "bg-green-50 text-green-700";
     case "Medium": return "bg-yellow-100 text-yellow-800";
     case "Medium-High": return "bg-orange-100 text-orange-800";
     case "High": return "bg-red-100 text-red-800";
@@ -69,21 +68,21 @@ function getDifficultyColor(difficulty: string): string {
 }
 
 function getCategoryColor(category: string): string {
-  return category === "AI & Communications" ? "bg-purple-100 text-purple-800 border-purple-300" : "bg-blue-100 text-blue-800 border-blue-300";
+  return category === "AI & Communications" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800";
 }
 
-function getDeadlineColor(days: number): string {
-  if (days < 0) return "text-gray-500";
-  if (days <= 7) return "text-red-600 font-bold";
-  if (days <= 30) return "text-orange-600";
+function getDeadlineColor(daysUntilDeadline: number): string {
+  if (daysUntilDeadline < 0) return "text-gray-500";
+  if (daysUntilDeadline < 7) return "text-red-600";
+  if (daysUntilDeadline < 30) return "text-orange-600";
   return "text-green-600";
 }
 
-function getDeadlineLabel(days: number): string {
-  if (days < 0) return "已截止";
-  if (days === 0) return "今日截止";
-  if (days === 1) return "明日截止";
-  return `还有 ${days} 天`;
+function getDeadlineLabel(daysUntilDeadline: number): string {
+  if (daysUntilDeadline < 0) return "已截止";
+  if (daysUntilDeadline === 0) return "今日截止";
+  if (daysUntilDeadline === 1) return "明日截止";
+  return `还有 ${daysUntilDeadline} 天`;
 }
 
 type SortBy = "deadline-asc" | "deadline-desc" | "name" | "popularity";
@@ -102,11 +101,11 @@ export default function Home() {
     let filtered = conferences.filter(conf => {
       const matchesSearch = conf.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDifficulty = !difficultyFilter || conf.difficulty === difficultyFilter;
-      const matchesExpired = showExpired || conf.daysUntilDeadline >= 0;
       const matchesCategory = categoryFilter === "all" || 
         (categoryFilter === "traditional" && conf.category === "Traditional Communications") ||
         (categoryFilter === "ai" && conf.category === "AI & Communications");
-      return matchesSearch && matchesDifficulty && matchesExpired && matchesCategory;
+      const matchesExpired = showExpired || conf.daysUntilDeadline >= 0;
+      return matchesSearch && matchesDifficulty && matchesCategory && matchesExpired;
     });
 
     return filtered.sort((a, b) => {
@@ -121,11 +120,11 @@ export default function Home() {
     let filtered = journals.filter(journal => {
       const matchesSearch = journal.name.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDifficulty = !difficultyFilter || journal.difficulty === difficultyFilter;
-      const matchesExpired = showExpired || journal.daysUntilDeadline >= 0;
       const matchesCategory = categoryFilter === "all" || 
         (categoryFilter === "traditional" && journal.category === "Traditional Communications") ||
         (categoryFilter === "ai" && journal.category === "AI & Communications");
-      return matchesSearch && matchesDifficulty && matchesExpired && matchesCategory;
+      const matchesExpired = showExpired || journal.daysUntilDeadline >= 0;
+      return matchesSearch && matchesDifficulty && matchesCategory && matchesExpired;
     });
 
     return filtered.sort((a, b) => {
@@ -138,43 +137,59 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <section className="relative w-full py-20 md:py-32 bg-cover bg-center">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70"></div>
-        <div className="relative container mx-auto px-4 text-center">
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-white mb-4">Conferences & Journals</h1>
-          <p className="text-lg text-blue-50">Comprehensive Guide for Graduate Students in ICE</p>
-          <p className="text-sm text-blue-100 mt-2">15 Conferences + 23 Journals (Including AI & Communications)</p>
-          <div className="mt-6">
-            <Button onClick={() => setLocation("/my-list")} variant="secondary" size="lg" className="gap-2">
-              <Heart size={20} />
-              My Submission List ({favorites.length})
-            </Button>
-          </div>
+      {/* Hero Section */}
+      <section className="w-full py-20 md:py-32 bg-gradient-to-r from-primary to-primary/80 text-center text-white">
+        <div className="container mx-auto px-4">
+          <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Conferences & Journals</h1>
+          <p className="text-lg text-blue-50 mb-2">Comprehensive Guide for Graduate Students in ICE</p>
+          <p className="text-sm text-blue-100 mb-6">15 Conferences + 23 Journals (Including AI & Communications)</p>
+          <Button onClick={() => setLocation("/my-list")} variant="secondary" size="lg" className="gap-2">
+            <Heart size={20} />
+            My Submission List ({favorites.length})
+          </Button>
         </div>
       </section>
 
-      <section className="py-8 bg-secondary/30 border-b border-border sticky top-0 z-20 shadow-md">
-        <div className="container mx-auto px-4">
-          <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 text-muted-foreground" size={20} />
-              <input type="text" placeholder="Search conferences or journals..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
-            </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-semibold text-muted-foreground">Category:</span>
+      {/* Filter Section - Sticky */}
+      <section className="sticky top-0 z-40 w-full bg-secondary/50 border-b border-border shadow-md">
+        <div className="container mx-auto px-4 py-6 space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-3 text-muted-foreground" size={20} />
+            <input 
+              type="text" 
+              placeholder="Search conferences or journals..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" 
+            />
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-sm font-semibold text-muted-foreground min-w-fit">Category:</span>
+            <div className="flex flex-wrap gap-2">
               <Button variant={categoryFilter === "all" ? "default" : "outline"} onClick={() => setCategoryFilter("all")} size="sm">All</Button>
               <Button variant={categoryFilter === "traditional" ? "default" : "outline"} onClick={() => setCategoryFilter("traditional")} size="sm">Traditional Communications</Button>
-              <Button variant={categoryFilter === "ai" ? "default" : "outline"} onClick={() => setCategoryFilter("ai")} size="sm" className="bg-purple-600 hover:bg-purple-700">AI & Communications</Button>
+              <Button variant={categoryFilter === "ai" ? "default" : "outline"} onClick={() => setCategoryFilter("ai")} size="sm" className="bg-purple-600 hover:bg-purple-700 text-white">AI & Communications</Button>
             </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-semibold text-muted-foreground">Difficulty:</span>
+          </div>
+
+          {/* Difficulty Filter */}
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-sm font-semibold text-muted-foreground min-w-fit">Difficulty:</span>
+            <div className="flex flex-wrap gap-2">
               <Button variant={!difficultyFilter ? "default" : "outline"} onClick={() => setDifficultyFilter(null)} size="sm">All</Button>
               {["Low", "Medium", "Medium-High", "High"].map(diff => (
                 <Button key={diff} variant={difficultyFilter === diff ? "default" : "outline"} onClick={() => setDifficultyFilter(diff)} size="sm">{diff}</Button>
               ))}
             </div>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="text-sm font-semibold text-muted-foreground">Sort by:</span>
+          </div>
+
+          {/* Sort Options */}
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-sm font-semibold text-muted-foreground min-w-fit">Sort by:</span>
+            <div className="flex flex-wrap gap-2">
               <Button variant={sortBy === "deadline-asc" ? "default" : "outline"} onClick={() => setSortBy("deadline-asc")} size="sm" className="gap-2">
                 <ArrowUpDown size={16} />Deadline (Soon First)
               </Button>
@@ -193,14 +208,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16">
+      {/* Content Section */}
+      <section className="w-full py-8">
         <div className="container mx-auto px-4">
-          <Tabs defaultValue="conferences">
-            <TabsList className="grid w-full grid-cols-2 mb-8 mt-20">
+          <Tabs defaultValue="conferences" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-8">
               <TabsTrigger value="conferences">Conferences ({filteredAndSortedConferences.length})</TabsTrigger>
               <TabsTrigger value="journals">Journals ({filteredAndSortedJournals.length})</TabsTrigger>
             </TabsList>
 
+            {/* Conferences Tab */}
             <TabsContent value="conferences" className="space-y-4">
               {filteredAndSortedConferences.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No conferences found matching your criteria.</p>
@@ -209,7 +226,7 @@ export default function Home() {
                   <Card key={conf.id} className={`hover:shadow-lg transition-shadow ${conf.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
                     <CardHeader>
                       <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <CardTitle className="text-lg md:text-xl mb-2">{conf.name}</CardTitle>
                           <div className="flex flex-wrap gap-2 mb-2">
                             <Badge className={getCategoryColor(conf.category)} variant="outline">{conf.category}</Badge>
@@ -247,6 +264,7 @@ export default function Home() {
               )}
             </TabsContent>
 
+            {/* Journals Tab */}
             <TabsContent value="journals" className="space-y-4">
               {filteredAndSortedJournals.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No journals found matching your criteria.</p>
@@ -255,7 +273,7 @@ export default function Home() {
                   <Card key={journal.id} className={`hover:shadow-lg transition-shadow ${journal.daysUntilDeadline < 0 ? "opacity-60" : ""}`}>
                     <CardHeader>
                       <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <CardTitle className="text-lg md:text-xl mb-2">{journal.name}</CardTitle>
                           <div className="flex flex-wrap gap-2 mb-2">
                             <Badge className={getCategoryColor(journal.category)} variant="outline">{journal.category}</Badge>
@@ -295,12 +313,6 @@ export default function Home() {
           </Tabs>
         </div>
       </section>
-
-      <footer className="py-8 border-t border-border bg-muted/30">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Conferences & Journals Guide | For Graduate Students in Information & Communication Engineering</p>
-        </div>
-      </footer>
     </div>
   );
 }
