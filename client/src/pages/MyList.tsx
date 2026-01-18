@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Heart, Download, Trash2, ArrowUpDown } from "lucide-react";
+import { ArrowLeft, Heart, Download, Trash2, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
@@ -74,6 +74,117 @@ function getDeadlineLabel(days: number): string {
 
 type SortBy = "deadline-asc" | "deadline-desc" | "name";
 
+function Calendar({ items }: { items: Array<{ name: string; deadline: string; type: "conference" | "journal"; difficulty: string }> }) {
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1));
+
+  const daysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  const firstDayOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+
+  const itemsByDate = useMemo(() => {
+    const map: Record<string, typeof items> = {};
+    items.forEach(item => {
+      if (!map[item.deadline]) map[item.deadline] = [];
+      map[item.deadline].push(item);
+    });
+    return map;
+  }, [items]);
+
+  const monthName = currentDate.toLocaleString("default", { month: "long", year: "numeric" });
+  const days = [];
+  const totalCells = firstDayOfMonth(currentDate) + daysInMonth(currentDate);
+
+  for (let i = 0; i < totalCells; i++) {
+    if (i < firstDayOfMonth(currentDate)) {
+      days.push(null);
+    } else {
+      days.push(i - firstDayOfMonth(currentDate) + 1);
+    }
+  }
+
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+  };
+
+  return (
+    <Card className="mb-8">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Deadline Calendar</CardTitle>
+          <div className="flex gap-2">
+            <Button onClick={handlePrevMonth} variant="outline" size="sm"><ChevronLeft size={16} /></Button>
+            <span className="px-4 py-2 font-semibold">{monthName}</span>
+            <Button onClick={handleNextMonth} variant="outline" size="sm"><ChevronRight size={16} /></Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-7 gap-1 mb-4">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
+            <div key={day} className="text-center font-semibold text-sm text-muted-foreground py-2">
+              {day}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-1">
+          {days.map((day, idx) => {
+            const dateStr = day ? `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}` : null;
+            const dayItems = dateStr ? itemsByDate[dateStr] : null;
+            const hasItems = dayItems && dayItems.length > 0;
+
+            return (
+              <div
+                key={idx}
+                className={`min-h-24 p-2 border rounded-lg text-sm ${
+                  day ? "bg-background" : "bg-muted/30"
+                } ${hasItems ? "border-primary bg-primary/5" : "border-border"}`}
+              >
+                {day && (
+                  <>
+                    <div className="font-semibold text-foreground mb-1">{day}</div>
+                    {dayItems && dayItems.length > 0 && (
+                      <div className="space-y-1">
+                        {dayItems.map((item, i) => (
+                          <div key={i} className="text-xs truncate">
+                            <Badge variant="outline" className="text-xs px-1 py-0 bg-primary/10 text-primary border-primary/30">
+                              {item.type === "conference" ? "Conf" : "Jour"}
+                            </Badge>
+                          </div>
+                        ))}
+                        {dayItems.length > 2 && <div className="text-xs text-muted-foreground">+{dayItems.length - 2} more</div>}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Object.entries(itemsByDate).map(([date, dateItems]) => (
+            <div key={date} className="border border-border rounded-lg p-3 bg-muted/30">
+              <div className="font-semibold text-sm mb-2">{date}</div>
+              <div className="space-y-1">
+                {dateItems.map((item, i) => (
+                  <div key={i} className="text-xs text-foreground truncate">
+                    <Badge variant="outline" className="text-xs mr-1">
+                      {item.type === "conference" ? "Conference" : "Journal"}
+                    </Badge>
+                    {item.name.substring(0, 30)}...
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function MyList() {
   const [, setLocation] = useLocation();
   const { favorites, removeFavorite, clearFavorites } = useFavorites();
@@ -104,6 +215,13 @@ export default function MyList() {
       return a.name.localeCompare(b.name);
     });
   }, [favorites, sortBy]);
+
+  const allFavoriteItems = useMemo(() => {
+    return [
+      ...favoriteConferences.map(c => ({ ...c, type: "conference" as const })),
+      ...favoriteJournals.map(j => ({ ...j, type: "journal" as const })),
+    ];
+  }, [favoriteConferences, favoriteJournals]);
 
   const exportAsCSV = () => {
     let csv = "Type,Name,Deadline,Days Until Deadline,Difficulty,Audience\n";
@@ -178,11 +296,20 @@ export default function MyList() {
 
           <section className="py-16">
             <div className="container mx-auto px-4">
-              <Tabs defaultValue="conferences">
-                <TabsList className="grid w-full grid-cols-2 mb-8">
+              <Tabs defaultValue="calendar">
+                <TabsList className="grid w-full grid-cols-3 mb-8">
+                  <TabsTrigger value="calendar">Calendar View</TabsTrigger>
                   <TabsTrigger value="conferences">Conferences ({favoriteConferences.length})</TabsTrigger>
                   <TabsTrigger value="journals">Journals ({favoriteJournals.length})</TabsTrigger>
                 </TabsList>
+
+                <TabsContent value="calendar">
+                  {allFavoriteItems.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No items to display in calendar.</p>
+                  ) : (
+                    <Calendar items={allFavoriteItems} />
+                  )}
+                </TabsContent>
 
                 <TabsContent value="conferences" className="space-y-4">
                   {favoriteConferences.length === 0 ? (
