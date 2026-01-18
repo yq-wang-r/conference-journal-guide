@@ -209,7 +209,7 @@ export default function Home() {
       </section>
 
       {/* Content Section */}
-      <section className="w-full py-8">
+      <section className="w-full py-8 pt-24">
         <div className="container mx-auto px-4">
           <Tabs defaultValue="conferences" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
