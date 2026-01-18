@@ -9,52 +9,52 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 
 const conferences = [
   // Traditional Communications
-  { id: "icc2026", name: "IEEE ICC 2026", date: "May 24-28, 2026", location: "Glasgow, UK", website: "https://icc2026.ieee-icc.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-01-18", daysUntilDeadline: 0, category: "Traditional Communications" },
-  { id: "wcnc2026", name: "IEEE WCNC 2026", date: "April 13-16, 2026", location: "Kuala Lumpur, Malaysia", website: "https://wcnc2026.ieee-wcnc.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-15", daysUntilDeadline: 28, category: "Traditional Communications" },
-  { id: "globecom2026", name: "IEEE GLOBECOM 2026", date: "December 7-11, 2026", location: "Macau, China", website: "https://globecom2026.ieee-globecom.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-06-15", daysUntilDeadline: 149, category: "Traditional Communications" },
-  { id: "icct2026", name: "IEEE ICCT 2026", date: "October 16-18, 2026", location: "Zhuhai, China", website: "https://www.ieee-icct.org/", difficulty: "Medium-High", audience: "Master & PhD students", deadline: "2026-05-31", daysUntilDeadline: 134, category: "Traditional Communications" },
-  { id: "ctw2026", name: "IEEE CTW 2026", date: "May 17-20, 2026", location: "Azores, Portugal", website: "https://ctw2026.ieee-ctw.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-01", daysUntilDeadline: 14, category: "Traditional Communications" },
-  { id: "secon2026", name: "IEEE SECON 2026", date: "TBD", location: "TBD", website: "https://secon2026.ieee-secon.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-03-15", daysUntilDeadline: 56, category: "Traditional Communications" },
-  { id: "ccnc2026", name: "IEEE CCNC 2026", date: "January 11-13, 2026", location: "Las Vegas, USA", website: "https://www.ieee-ccnc.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2025-09-15", daysUntilDeadline: -125, category: "Traditional Communications" },
-  { id: "isac2026", name: "IEEE ISAC 2026", date: "November 16-18, 2026", location: "TBD", website: "https://www.ieee.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-05-01", daysUntilDeadline: 104, category: "Traditional Communications" },
-  { id: "latiot2026", name: "IEEE LatIoT 2026", date: "March 19-21, 2026", location: "Washington DC, USA", website: "https://www.ieee.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-01-31", daysUntilDeadline: 13, category: "Traditional Communications" },
-  { id: "wimob2026", name: "WiMob 2026", date: "TBD", location: "TBD", website: "http://www.wimob.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-04-15", daysUntilDeadline: 88, category: "Traditional Communications" },
-  { id: "eice2026", name: "EICE 2026", date: "January 30 - February 1, 2026", location: "Sanya, China", website: "http://www.ei-ce.com/", difficulty: "Low", audience: "Master students", deadline: "2026-01-20", daysUntilDeadline: 2, category: "Traditional Communications" },
+  { id: "icc2026", name: "IEEE ICC 2026", date: "May 24-28, 2026", location: "Glasgow, UK", website: "https://icc2026.ieee-icc.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-01-18", daysUntilDeadline: 0, category: "Traditional Communications", popularity: 95 },
+  { id: "wcnc2026", name: "IEEE WCNC 2026", date: "April 13-16, 2026", location: "Kuala Lumpur, Malaysia", website: "https://wcnc2026.ieee-wcnc.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-15", daysUntilDeadline: 28, category: "Traditional Communications", popularity: 90 },
+  { id: "globecom2026", name: "IEEE GLOBECOM 2026", date: "December 7-11, 2026", location: "Macau, China", website: "https://globecom2026.ieee-globecom.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-06-15", daysUntilDeadline: 149, category: "Traditional Communications", popularity: 92 },
+  { id: "icct2026", name: "IEEE ICCT 2026", date: "October 16-18, 2026", location: "Zhuhai, China", website: "https://www.ieee-icct.org/", difficulty: "Medium-High", audience: "Master & PhD students", deadline: "2026-05-31", daysUntilDeadline: 134, category: "Traditional Communications", popularity: 75 },
+  { id: "ctw2026", name: "IEEE CTW 2026", date: "May 17-20, 2026", location: "Azores, Portugal", website: "https://ctw2026.ieee-ctw.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-01", daysUntilDeadline: 14, category: "Traditional Communications", popularity: 80 },
+  { id: "secon2026", name: "IEEE SECON 2026", date: "TBD", location: "TBD", website: "https://secon2026.ieee-secon.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-03-15", daysUntilDeadline: 56, category: "Traditional Communications", popularity: 78 },
+  { id: "ccnc2026", name: "IEEE CCNC 2026", date: "January 11-13, 2026", location: "Las Vegas, USA", website: "https://www.ieee-ccnc.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2025-09-15", daysUntilDeadline: -125, category: "Traditional Communications", popularity: 70 },
+  { id: "isac2026", name: "IEEE ISAC 2026", date: "November 16-18, 2026", location: "TBD", website: "https://www.ieee.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-05-01", daysUntilDeadline: 104, category: "Traditional Communications", popularity: 82 },
+  { id: "latiot2026", name: "IEEE LatIoT 2026", date: "March 19-21, 2026", location: "Washington DC, USA", website: "https://www.ieee.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-01-31", daysUntilDeadline: 13, category: "Traditional Communications", popularity: 65 },
+  { id: "wimob2026", name: "WiMob 2026", date: "TBD", location: "TBD", website: "http://www.wimob.org/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-04-15", daysUntilDeadline: 88, category: "Traditional Communications", popularity: 68 },
+  { id: "eice2026", name: "EICE 2026", date: "January 30 - February 1, 2026", location: "Sanya, China", website: "http://www.ei-ce.com/", difficulty: "Low", audience: "Master students", deadline: "2026-01-20", daysUntilDeadline: 2, category: "Traditional Communications", popularity: 60 },
   
   // AI & Communications
-  { id: "icmlcn2026", name: "IEEE ICMLCN 2026", date: "May 26-29, 2026", location: "Barcelona, Spain", website: "https://icmlcn2026.ieee-icmlcn.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-01-31", daysUntilDeadline: 13, category: "AI & Communications" },
-  { id: "6g_summit_2026", name: "EuCNC & 6G Summit 2026", date: "June 2-4, 2026", location: "Malaga, Spain", website: "https://6g-ia.eu/event/eucnc-6g-summit-2026-malaga-spain/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-28", daysUntilDeadline: 41, category: "AI & Communications" },
-  { id: "global_6g_2026", name: "Global 6G Conference 2026", date: "April 15-17, 2026", location: "Nanjing, China", website: "https://en.g6gconference.com/", difficulty: "Medium-High", audience: "Master & PhD students", deadline: "2026-02-15", daysUntilDeadline: 28, category: "AI & Communications" },
-  { id: "san_diego_wireless_2026", name: "San Diego Wireless Summit 2026", date: "January 22-23, 2026", location: "San Diego, USA", website: "https://6g.ucsd.edu/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-01-10", daysUntilDeadline: -8, category: "AI & Communications" },
+  { id: "icmlcn2026", name: "IEEE ICMLCN 2026", date: "May 26-29, 2026", location: "Barcelona, Spain", website: "https://icmlcn2026.ieee-icmlcn.org/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-01-31", daysUntilDeadline: 13, category: "AI & Communications", popularity: 98 },
+  { id: "6g_summit_2026", name: "EuCNC & 6G Summit 2026", date: "June 2-4, 2026", location: "Malaga, Spain", website: "https://6g-ia.eu/event/eucnc-6g-summit-2026-malaga-spain/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-02-28", daysUntilDeadline: 41, category: "AI & Communications", popularity: 96 },
+  { id: "global_6g_2026", name: "Global 6G Conference 2026", date: "April 15-17, 2026", location: "Nanjing, China", website: "https://en.g6gconference.com/", difficulty: "Medium-High", audience: "Master & PhD students", deadline: "2026-02-15", daysUntilDeadline: 28, category: "AI & Communications", popularity: 88 },
+  { id: "san_diego_wireless_2026", name: "San Diego Wireless Summit 2026", date: "January 22-23, 2026", location: "San Diego, USA", website: "https://6g.ucsd.edu/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-01-10", daysUntilDeadline: -8, category: "AI & Communications", popularity: 72 },
 ];
 
 const journals = [
   // Traditional Communications
-  { id: "ieee_comm_letters", name: "IEEE Communications Letters", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-comml", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_comm_surveys", name: "IEEE Communications Surveys & Tutorials", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-comst", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_jsac", name: "IEEE Journal on Selected Areas in Communications", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-jsac", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-06-30", daysUntilDeadline: 164, category: "Traditional Communications" },
-  { id: "ieee_net_letters", name: "IEEE Networking Letters", impact: "Medium-High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-lnet", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_ojcoms", name: "IEEE Open Journal of the Communications Society", impact: "Medium", review: "2-3 months", website: "https://www.comsoc.org/publications/journals/ieee-ojcoms", difficulty: "Low-Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_tccn", name: "IEEE Transactions on Cognitive Communications and Networking", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tccn", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_tcom", name: "IEEE Transactions on Communications", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-tcom", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_tgcn", name: "IEEE Transactions on Green Communications and Networking", impact: "Medium-High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tgcn", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_tnet", name: "IEEE Transactions on Networking", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-tnet", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_twc", name: "IEEE Transactions on Wireless Communications", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-twc", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_wcl", name: "IEEE Wireless Communications Letters", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-wcl", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_jcn", name: "IEEE/KICS Journal of Communications and Networks", impact: "Medium-High", review: "4-6 months", website: "http://jcn.or.kr/html/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "jocn", name: "Journal of Optical Communications and Networking", impact: "High", review: "4-6 months", website: "https://opg.optica.org/jocn/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_iot", name: "IEEE Internet of Things Journal", impact: "High", review: "4-6 months", website: "https://ieee-iotj.org/", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_tvt", name: "IEEE Transactions on Vehicular Technology", impact: "High", review: "4-6 months", website: "https://www.ieee.org/", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "signal_processing", name: "Signal Processing (Elsevier)", impact: "High", review: "4-6 months", website: "https://www.sciencedirect.com/journal/signal-processing", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "wireless_networks", name: "Wireless Networks (Springer)", impact: "Medium-High", review: "4-6 months", website: "https://link.springer.com/journal/11276", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "npj_wireless", name: "npj Wireless Technology (Nature)", impact: "High", review: "3-4 months", website: "https://www.nature.com/npjwireltech/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
-  { id: "ieee_access", name: "IEEE Access", impact: "Medium", review: "2-3 months", website: "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6287639", difficulty: "Low", audience: "Master students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications" },
+  { id: "ieee_comm_letters", name: "IEEE Communications Letters", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-comml", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 88 },
+  { id: "ieee_comm_surveys", name: "IEEE Communications Surveys & Tutorials", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-comst", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 92 },
+  { id: "ieee_jsac", name: "IEEE Journal on Selected Areas in Communications", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-jsac", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-06-30", daysUntilDeadline: 164, category: "Traditional Communications", popularity: 94 },
+  { id: "ieee_net_letters", name: "IEEE Networking Letters", impact: "Medium-High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-lnet", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 75 },
+  { id: "ieee_ojcoms", name: "IEEE Open Journal of the Communications Society", impact: "Medium", review: "2-3 months", website: "https://www.comsoc.org/publications/journals/ieee-ojcoms", difficulty: "Low-Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 70 },
+  { id: "ieee_tccn", name: "IEEE Transactions on Cognitive Communications and Networking", impact: "High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tccn", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 85 },
+  { id: "ieee_tcom", name: "IEEE Transactions on Communications", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-tcom", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 96 },
+  { id: "ieee_tgcn", name: "IEEE Transactions on Green Communications and Networking", impact: "Medium-High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tgcn", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 78 },
+  { id: "ieee_tnet", name: "IEEE Transactions on Networking", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-tnet", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 95 },
+  { id: "ieee_twc", name: "IEEE Transactions on Wireless Communications", impact: "Very High", review: "5-7 months", website: "https://www.comsoc.org/publications/journals/ieee-twc", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 98 },
+  { id: "ieee_wcl", name: "IEEE Wireless Communications Letters", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-wcl", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 86 },
+  { id: "ieee_jcn", name: "IEEE/KICS Journal of Communications and Networks", impact: "Medium-High", review: "4-6 months", website: "http://jcn.or.kr/html/", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 72 },
+  { id: "jocn", name: "Journal of Optical Communications and Networking", impact: "High", review: "4-6 months", website: "https://opg.optica.org/jocn/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 80 },
+  { id: "ieee_iot", name: "IEEE Internet of Things Journal", impact: "High", review: "4-6 months", website: "https://ieee-iotj.org/", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 82 },
+  { id: "ieee_tvt", name: "IEEE Transactions on Vehicular Technology", impact: "High", review: "4-6 months", website: "https://www.ieee.org/", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 76 },
+  { id: "signal_processing", name: "Signal Processing (Elsevier)", impact: "High", review: "4-6 months", website: "https://www.sciencedirect.com/journal/signal-processing", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 79 },
+  { id: "wireless_networks", name: "Wireless Networks (Springer)", impact: "Medium-High", review: "4-6 months", website: "https://link.springer.com/journal/11276", difficulty: "Medium", audience: "Master & PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 74 },
+  { id: "npj_wireless", name: "npj Wireless Technology (Nature)", impact: "High", review: "3-4 months", website: "https://www.nature.com/npjwireltech/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 90 },
+  { id: "ieee_access", name: "IEEE Access", impact: "Medium", review: "2-3 months", website: "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6287639", difficulty: "Low", audience: "Master students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "Traditional Communications", popularity: 65 },
   
   // AI & Communications
-  { id: "ieee_tmlcn", name: "IEEE Transactions on Machine Learning in Communications", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-tmlcn", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications" },
-  { id: "nature_comms_ai", name: "Nature Communications AI & Computing", impact: "Very High", review: "2-3 months", website: "https://www.nature.com/commsaicomp/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications" },
-  { id: "ieee_tmbmc", name: "IEEE Transactions on Molecular, Biological, Multi-Scale Communications", impact: "Medium", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tmbmc", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications" },
-  { id: "ieee_tnse", name: "IEEE Transactions on Network Science and Engineering", impact: "Medium-High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tnse", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications" },
+  { id: "ieee_tmlcn", name: "IEEE Transactions on Machine Learning in Communications", impact: "High", review: "3-4 months", website: "https://www.comsoc.org/publications/journals/ieee-tmlcn", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications", popularity: 97 },
+  { id: "nature_comms_ai", name: "Nature Communications AI & Computing", impact: "Very High", review: "2-3 months", website: "https://www.nature.com/commsaicomp/", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications", popularity: 99 },
+  { id: "ieee_tmbmc", name: "IEEE Transactions on Molecular, Biological, Multi-Scale Communications", impact: "Medium", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tmbmc", difficulty: "High", audience: "PhD students, Researchers", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications", popularity: 68 },
+  { id: "ieee_tnse", name: "IEEE Transactions on Network Science and Engineering", impact: "Medium-High", review: "4-6 months", website: "https://www.comsoc.org/publications/journals/ieee-tnse", difficulty: "Medium-High", audience: "PhD students", deadline: "2026-12-31", daysUntilDeadline: 347, category: "AI & Communications", popularity: 84 },
 ];
 
 function getDifficultyColor(difficulty: string): string {
@@ -86,7 +86,7 @@ function getDeadlineLabel(days: number): string {
   return `还有 ${days} 天`;
 }
 
-type SortBy = "deadline-asc" | "deadline-desc" | "name";
+type SortBy = "deadline-asc" | "deadline-desc" | "name" | "popularity";
 type CategoryFilter = "all" | "traditional" | "ai";
 
 export default function Home() {
@@ -112,6 +112,7 @@ export default function Home() {
     return filtered.sort((a, b) => {
       if (sortBy === "deadline-asc") return a.daysUntilDeadline - b.daysUntilDeadline;
       if (sortBy === "deadline-desc") return b.daysUntilDeadline - a.daysUntilDeadline;
+      if (sortBy === "popularity") return b.popularity - a.popularity;
       return a.name.localeCompare(b.name);
     });
   }, [searchTerm, difficultyFilter, sortBy, showExpired, categoryFilter]);
@@ -130,6 +131,7 @@ export default function Home() {
     return filtered.sort((a, b) => {
       if (sortBy === "deadline-asc") return a.daysUntilDeadline - b.daysUntilDeadline;
       if (sortBy === "deadline-desc") return b.daysUntilDeadline - a.daysUntilDeadline;
+      if (sortBy === "popularity") return b.popularity - a.popularity;
       return a.name.localeCompare(b.name);
     });
   }, [searchTerm, difficultyFilter, sortBy, showExpired, categoryFilter]);
@@ -180,6 +182,9 @@ export default function Home() {
                 <ArrowUpDown size={16} />Deadline (Later First)
               </Button>
               <Button variant={sortBy === "name" ? "default" : "outline"} onClick={() => setSortBy("name")} size="sm">Name (A-Z)</Button>
+              <Button variant={sortBy === "popularity" ? "default" : "outline"} onClick={() => setSortBy("popularity")} size="sm" className="gap-2">
+                <Award size={16} />Popularity
+              </Button>
               <Button variant={showExpired ? "default" : "outline"} onClick={() => setShowExpired(!showExpired)} size="sm">
                 {showExpired ? "Show All" : "Hide Expired"}
               </Button>
@@ -210,6 +215,7 @@ export default function Home() {
                             <Badge className={getCategoryColor(conf.category)} variant="outline">{conf.category}</Badge>
                             <Badge className={getDifficultyColor(conf.difficulty)}>Difficulty: {conf.difficulty}</Badge>
                             <Badge variant="outline" className="bg-blue-50">{conf.audience}</Badge>
+                            <Badge variant="secondary" className="bg-amber-100 text-amber-900">🔥 {conf.popularity}% Hot</Badge>
                           </div>
                           <div className={`text-sm font-semibold ${getDeadlineColor(conf.daysUntilDeadline)}`}>
                             📅 Deadline: {conf.deadline} ({getDeadlineLabel(conf.daysUntilDeadline)})
@@ -254,6 +260,7 @@ export default function Home() {
                             <Badge className={getCategoryColor(journal.category)} variant="outline">{journal.category}</Badge>
                             <Badge className={getDifficultyColor(journal.difficulty)}>Difficulty: {journal.difficulty}</Badge>
                             <Badge variant="outline" className="bg-blue-50">{journal.audience}</Badge>
+                            <Badge variant="secondary" className="bg-amber-100 text-amber-900">🔥 {journal.popularity}% Hot</Badge>
                           </div>
                           <div className={`text-sm font-semibold ${getDeadlineColor(journal.daysUntilDeadline)}`}>
                             📅 Next Deadline: {journal.deadline} ({getDeadlineLabel(journal.daysUntilDeadline)})
