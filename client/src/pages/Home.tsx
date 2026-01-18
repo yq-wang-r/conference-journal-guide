@@ -88,7 +88,14 @@ function getDeadlineLabel(daysUntilDeadline: number): string {
 }
 
 type SortBy = "deadline-asc" | "deadline-desc" | "name" | "popularity";
-type CategoryFilter = "all" | "traditional" | "ai";
+type CategoryFilter = "all" | "traditional" | "ai" | "embodied-ai";
+
+const categoryStyles: Record<CategoryFilter, { bg: string; text: string; label: string }> = {
+  all: { bg: "bg-slate-100", text: "text-slate-800", label: "All" },
+  traditional: { bg: "bg-blue-100", text: "text-blue-800", label: "Traditional Communications" },
+  ai: { bg: "bg-purple-100", text: "text-purple-800", label: "AI & Communications" },
+  "embodied-ai": { bg: "bg-orange-100", text: "text-orange-800", label: "AI & Embodied Intelligence" },
+};
 
 interface ConferenceData {
   id: string;
@@ -190,6 +197,13 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
+
+  const getCategoryColor = (category: string): string => {
+    if (category === "Traditional Communications") return "bg-blue-100 text-blue-800";
+    if (category === "AI & Communications") return "bg-purple-100 text-purple-800";
+    if (category === "AI & Embodied Intelligence") return "bg-orange-100 text-orange-800";
+    return "bg-slate-100 text-slate-800";
+  };
   const [sortBy, setSortBy] = useState<SortBy>("deadline-asc");
   const [showExpired, setShowExpired] = useState(false);
 
@@ -199,7 +213,8 @@ export default function Home() {
       const matchesDifficulty = !difficultyFilter || conf.difficulty === difficultyFilter;
       const matchesCategory = categoryFilter === "all" || 
         (categoryFilter === "traditional" && conf.category === "Traditional Communications") ||
-        (categoryFilter === "ai" && conf.category === "AI & Communications");
+        (categoryFilter === "ai" && conf.category === "AI & Communications") ||
+        (categoryFilter === "embodied-ai" && conf.category === "AI & Embodied Intelligence");
       const matchesExpired = showExpired || conf.daysUntilDeadline >= 0;
       return matchesSearch && matchesDifficulty && matchesCategory && matchesExpired;
     });
@@ -218,7 +233,8 @@ export default function Home() {
       const matchesDifficulty = !difficultyFilter || journal.difficulty === difficultyFilter;
       const matchesCategory = categoryFilter === "all" || 
         (categoryFilter === "traditional" && journal.category === "Traditional Communications") ||
-        (categoryFilter === "ai" && journal.category === "AI & Communications");
+        (categoryFilter === "ai" && journal.category === "AI & Communications") ||
+        (categoryFilter === "embodied-ai" && journal.category === "AI & Embodied Intelligence");
       const matchesExpired = showExpired || journal.daysUntilDeadline >= 0;
       return matchesSearch && matchesDifficulty && matchesCategory && matchesExpired;
     });
@@ -238,7 +254,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h1 className="font-display text-4xl md:text-6xl font-bold mb-4">Conferences & Journals</h1>
           <p className="text-lg text-blue-50 mb-2">Comprehensive Guide for Graduate Students in ICE</p>
-          <p className="text-sm text-blue-100 mb-6">15 Conferences + 23 Journals (Including AI & Communications)</p>
+          <p className="text-sm text-blue-100 mb-6">24 Conferences + 23 Journals (Traditional, AI & Communications, AI & Embodied Intelligence)</p>
           <div className="flex justify-center gap-4 text-sm mb-6">
             <div className="flex items-center gap-1">
               <Users size={16} />
@@ -277,9 +293,17 @@ export default function Home() {
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm font-semibold text-muted-foreground min-w-fit">Category:</span>
             <div className="flex flex-wrap gap-2">
-              <Button variant={categoryFilter === "all" ? "default" : "outline"} onClick={() => setCategoryFilter("all")} size="sm">All</Button>
-              <Button variant={categoryFilter === "traditional" ? "default" : "outline"} onClick={() => setCategoryFilter("traditional")} size="sm">Traditional Communications</Button>
-              <Button variant={categoryFilter === "ai" ? "default" : "outline"} onClick={() => setCategoryFilter("ai")} size="sm" className="bg-purple-600 hover:bg-purple-700 text-white" style={{color: '#000000', backgroundColor: '#fbfbfb'}}>AI & Communications</Button>
+              {Object.entries(categoryStyles).map(([key, style]) => (
+                <Button
+                  key={key}
+                  variant={categoryFilter === key ? "default" : "outline"}
+                  onClick={() => setCategoryFilter(key as CategoryFilter)}
+                  size="sm"
+                  className={categoryFilter === key ? `${style.bg} ${style.text} hover:opacity-90` : ""}
+                >
+                  {style.label}
+                </Button>
+              ))}
             </div>
           </div>
 
@@ -468,3 +492,5 @@ export default function Home() {
     </div>
   );
 }
+
+
