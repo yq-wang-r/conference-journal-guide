@@ -13,3 +13,5 @@
 - [x] 统一category卡片样式
 - [x] 更新Home.tsx数据结构支持新的category
 - [x] 测试新的category筛选功能
+- [x] 在Home.tsx中添加AI与具身智能主题的10个期刊数据
+- [x] 测试期刊筛选功能
